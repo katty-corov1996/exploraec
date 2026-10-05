@@ -11,7 +11,7 @@ class MapPlaceholderScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Mapa')),
       body: const Center(
         child: Text(
-          'Próximamente: mapa real (Sesión 4)',
+          'Próximamente: mapa real (Sesión 5)',
           style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
       ),

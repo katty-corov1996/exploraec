@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>ExploraEC necesita tu ubicación para mostrarte lugares cercanos.</string>
+
 </dict>
 </plist>

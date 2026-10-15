@@ -47,6 +47,18 @@ class GastosApiService {
     _token = token;
   }
 
+  /// GET /usuarios/me — `{id, email}`. La Sesión 7 usa el `id` para dar a la
+  /// caja de Hive de cada usuario su propio nombre (`gastos_<id>`).
+  Future<int> obtenerIdUsuario() async {
+    final respuesta = await _get('/usuarios/me');
+    final json = jsonDecode(utf8.decode(respuesta.bodyBytes));
+    final id = json is Map ? json['id'] : null;
+    if (id is! int) {
+      throw ApiException('Respuesta inesperada del servidor al leer tu perfil.');
+    }
+    return id;
+  }
+
   /// GET /gastos/?skip=&limit= (con barra final: sin ella el servidor responde 307; `http` sigue la redirección en GET, pero no en POST) — el total viene en la cabecera X-Total-Count.
   Future<({List<Gasto> gastos, int total})> listarGastos({
     int skip = 0,

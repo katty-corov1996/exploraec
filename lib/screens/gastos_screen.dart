@@ -7,6 +7,7 @@ import '../controllers/gastos_controller.dart';
 import '../controllers/places_controller.dart' show EstadoCarga;
 import '../models/gasto.dart';
 import '../services/api_exception.dart';
+import '../theme/app_theme.dart';
 import 'pantalla_con_fallo.dart';
 import '../widgets/empty_view.dart';
 import '../widgets/error_view.dart';
@@ -90,6 +91,7 @@ class GastosScreen extends GetView<GastosController> {
           return const EmptyView(mensaje: 'Aún no registras gastos en este viaje');
         }
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (controller.desdeCache.value)
               MaterialBanner(
@@ -103,15 +105,42 @@ class GastosScreen extends GetView<GastosController> {
                   ),
                 ],
               ),
+            _buildFiltroCategorias(context),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: controller.cargarGastos,
-                child: _buildLista(context, controller.gastos),
+                child: _buildLista(context, controller.gastosFiltrados),
               ),
             ),
           ],
         );
       }),
+    );
+  }
+
+  Widget _buildFiltroCategorias(BuildContext context) {
+    final categorias = ['Todas', ...controller.categoriasEnGastos];
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.xs,
+      ),
+      child: Row(
+        children: categorias.map((cat) {
+          final seleccionada = controller.categoriaSeleccionada.value == cat;
+          return Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.sm),
+            child: ChoiceChip(
+              label: Text(cat),
+              selected: seleccionada,
+              onSelected: (bool valor) {
+                controller.cambiarCategoria(valor ? cat : 'Todas');
+              },
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 

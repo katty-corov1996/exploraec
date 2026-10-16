@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
 import '../theme/app_theme.dart';
-// Solo lo usan las dos líneas comentadas del Paso 3 (validadores).
-// ignore: unused_import
 import '../utils/validadores.dart';
 
 /// Registro de una cuenta nueva — Sesión 8. Si el servidor acepta el
@@ -54,9 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextFormField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                    labelText: 'Correo', border: OutlineInputBorder()),
-                // TODO(sesion-08) Paso 3: descomenta la línea de abajo (validar el correo).
+                decoration: const InputDecoration(labelText: 'Correo', border: OutlineInputBorder()),
                 validator: Validadores.correo,
               ),
               const SizedBox(height: AppSpacing.md),
@@ -64,9 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _password,
                 obscureText: true,
                 decoration: const InputDecoration(
-                    labelText: 'Contraseña (8 a 72 caracteres)',
-                    border: OutlineInputBorder()),
-                // TODO(sesion-08) Paso 3: descomenta la línea de abajo (validar la contraseña).
+                    labelText: 'Contraseña (8 a 72 caracteres)', border: OutlineInputBorder()),
                 validator: Validadores.password,
               ),
               const SizedBox(height: AppSpacing.md),
@@ -75,16 +69,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   : Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.md),
                       child: Text(_auth.mensajeError.value,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.error)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.error)),
                     )),
               Obx(() => FilledButton(
                     onPressed: _auth.cargando.value ? null : _enviar,
                     child: _auth.cargando.value
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2))
+                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Text('Crear cuenta'),
                   )),
             ],

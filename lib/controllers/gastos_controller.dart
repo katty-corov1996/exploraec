@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../models/gasto.dart';
+import '../models/resumen_gastos.dart';
 import '../repositories/gastos_repository.dart';
 import '../services/api_client.dart';
 import '../services/gastos_api_service.dart';
@@ -78,7 +79,6 @@ class GastosController extends GetxController {
   Future<void> cargarCategorias() async {
     // Por qué: las categorías (y el límite de 500) las decide el servidor; la
     // app solo las muestra. Si mañana el backend agrega una, aparece sola.
-    // TODO(sesion-08) Paso 5: descomenta las 2 líneas de abajo (categorías).
     final r = await _api.listarCategorias();
     categorias.assignAll(r.categorias);
   }
@@ -88,9 +88,7 @@ class GastosController extends GetxController {
   Future<void> crear(String descripcion, double monto, String categoria) async {
     // Por qué: se manda el gasto al servidor y la pantalla se actualiza con lo
     // que el servidor guardó realmente (no se supone que salió bien).
-    // TODO(sesion-08) Paso 5: descomenta las 2 líneas de abajo (crear).
-    await _api.crear(
-        {'descripcion': descripcion, 'monto': monto, 'categoria': categoria});
+    await _api.crear({'descripcion': descripcion, 'monto': monto, 'categoria': categoria});
     await _refrescar();
   }
 
@@ -98,7 +96,6 @@ class GastosController extends GetxController {
   Future<void> actualizar(int id, Map<String, dynamic> cambios) async {
     // Por qué: PATCH modifica solo lo que se envía. Si el gasto ya no existe
     // (404), se refresca la lista para que desaparezca de la pantalla.
-    // TODO(sesion-08) Paso 6: descomenta las 7 líneas de abajo (editar).
     try {
       await _api.actualizar(id, cambios);
     } on ApiException catch (e) {
@@ -111,8 +108,6 @@ class GastosController extends GetxController {
   Future<void> eliminar(int id) async {
     // Por qué: mismo patrón que editar. El servidor responde 204 (sin cuerpo)
     // y la lista se vuelve a pedir, así la caché de Hive también se actualiza.
-    // TODO(sesion-08) Paso 6: descomenta las 7 líneas de abajo (eliminar).
-
     try {
       await _api.eliminar(id);
     } on ApiException catch (e) {
@@ -121,6 +116,9 @@ class GastosController extends GetxController {
     }
     await _refrescar();
   }
+
+  /// Resumen por categoría (Sesión 9): lo que se le envía al asistente.
+  Future<ResumenGastos> obtenerResumen() => _api.obtenerResumen();
 
   /// Borra todo lo de la persona que cierra sesión: la lista en pantalla y su
   /// caja de Hive (`GastosRepository.vaciar`, Sesión 7).

@@ -24,7 +24,6 @@ class ApiClient {
     // Por qué: sin este interceptor habría que añadir la cabecera
     // `Authorization: Bearer <token>` a mano en cada llamada. Aquí se añade
     // sola a toda petición cuando hay un token guardado.
-    // TODO(sesion-08) Paso 2: descomenta las 7 líneas de abajo (interceptor del token).
     this.dio.interceptors.add(InterceptorsWrapper(
       onRequest: (opciones, siguiente) {
         final t = token;
@@ -37,7 +36,6 @@ class ApiClient {
     // un 401. En vez de manejarlo en cada una, este interceptor avisa en un
     // solo lugar. El login se excluye: ahí un 401 solo significa «contraseña
     // incorrecta».
-    // TODO(sesion-08) Paso 7: descomenta las 9 líneas de abajo (interceptor del 401).
     this.dio.interceptors.add(InterceptorsWrapper(
       onError: (error, siguiente) {
         final esLogin = error.requestOptions.path == '/usuarios/token';
@@ -61,8 +59,7 @@ class ApiClient {
   Future<Response<dynamic>> get(String ruta, {Map<String, dynamic>? query}) =>
       _enviar(() => dio.get(ruta, queryParameters: query));
 
-  Future<Response<dynamic>> post(String ruta,
-          {Object? data, Options? options}) =>
+  Future<Response<dynamic>> post(String ruta, {Object? data, Options? options}) =>
       _enviar(() => dio.post(ruta, data: data, options: options));
 
   Future<Response<dynamic>> put(String ruta, {Object? data}) =>
@@ -71,12 +68,10 @@ class ApiClient {
   Future<Response<dynamic>> patch(String ruta, {Object? data}) =>
       _enviar(() => dio.patch(ruta, data: data));
 
-  Future<Response<dynamic>> delete(String ruta) =>
-      _enviar(() => dio.delete(ruta));
+  Future<Response<dynamic>> delete(String ruta) => _enviar(() => dio.delete(ruta));
 
   /// Único lugar con try/catch: todo error de `dio` sale como `ApiException`.
-  Future<Response<dynamic>> _enviar(
-      Future<Response<dynamic>> Function() peticion) async {
+  Future<Response<dynamic>> _enviar(Future<Response<dynamic>> Function() peticion) async {
     try {
       return await peticion();
     } on DioException catch (e) {
